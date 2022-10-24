@@ -5,6 +5,7 @@ import Square from "../square";
 import {
 	buildOrthogonalMoves,
 	buildDiagonalMoves,
+	canMoveOntoSquare,
 } from "engine/moveHelpers";
 
 export class Queen extends Piece {
@@ -12,9 +13,15 @@ export class Queen extends Piece {
 		super(player);
 	}
 
-	getAvailableMoves(board: Board): Square[] {
+	getAttackingSquares(board: Board): Square[] {
 		return buildOrthogonalMoves(this, board).concat(
 			buildDiagonalMoves(this, board),
+		);
+	}
+
+	getAvailableMoves(board: Board): Square[] {
+		return this.getAttackingSquares(board).filter((move) =>
+			canMoveOntoSquare(move, this, board),
 		);
 	}
 }

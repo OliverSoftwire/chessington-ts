@@ -29,6 +29,14 @@ export default class Board {
 		return this.board[square.row][square.col];
 	}
 
+	getPiecesOfPlayer(player: symbol): Piece[] {
+		return this.board
+			.flat()
+			.filter(
+				(piece) => piece && piece.player === player,
+			) as Piece[];
+	}
+
 	findPiece(pieceToFind: Piece) {
 		for (let row = 0; row < this.board.length; row++) {
 			for (let col = 0; col < this.board[row].length; col++) {

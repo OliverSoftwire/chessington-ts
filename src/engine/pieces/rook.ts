@@ -2,14 +2,23 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
-import { buildOrthogonalMoves } from "engine/moveHelpers";
+import {
+	buildOrthogonalMoves,
+	canMoveOntoSquare,
+} from "engine/moveHelpers";
 
 export class Rook extends Piece {
 	constructor(player: Player) {
 		super(player);
 	}
 
-	getAvailableMoves(board: Board): Square[] {
+	getAttackingSquares(board: Board): Square[] {
 		return buildOrthogonalMoves(this, board);
+	}
+
+	getAvailableMoves(board: Board): Square[] {
+		return this.getAttackingSquares(board).filter((move) =>
+			canMoveOntoSquare(move, this, board),
+		);
 	}
 }

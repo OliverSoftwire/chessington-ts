@@ -14,25 +14,20 @@ export function isOnBoard(square: Square): boolean {
 	);
 }
 
-export function canAttack(attacker: Piece, target?: Piece): boolean {
-	if (!target) return false;
-
-	return target.player !== attacker.player && !(target instanceof King);
-}
-
-export function isValidMove(
-	move: Square,
+export function canMoveOntoSquare(
+	square: Square,
 	piece: Piece,
 	board: Board,
 ): boolean {
-	if (!isOnBoard(move)) return false;
+	if (!isOnBoard(square)) return false;
 
-	const pieceUnderMove = board.getPiece(move);
-	if (pieceUnderMove) {
-		return canAttack(piece, pieceUnderMove);
-	}
+	const pieceOnSquare = board.getPiece(square);
+	if (!pieceOnSquare) return true;
 
-	return true;
+	return (
+		piece.player !== pieceOnSquare.player &&
+		!(pieceOnSquare instanceof King)
+	);
 }
 
 function filterLines(
@@ -56,7 +51,7 @@ function filterLines(
 				currentPosition.row + offset.row,
 				currentPosition.col + offset.col,
 			);
-			if (!isValidMove(move, piece, board)) break;
+			if (!isOnBoard(move)) break;
 
 			moves.push(move);
 			if (board.getPiece(move)) break;

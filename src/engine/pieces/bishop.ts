@@ -1,14 +1,20 @@
 import Board from "../board";
 import { Piece } from "./piece";
 import Square from "../square";
-import { buildDiagonalMoves } from "engine/moveHelpers";
+import { buildDiagonalMoves, canMoveOntoSquare } from "engine/moveHelpers";
 
 export class Bishop extends Piece {
 	constructor(player: symbol) {
 		super(player);
 	}
 
-	getAvailableMoves(board: Board): Square[] {
+	getAttackingSquares(board: Board): Square[] {
 		return buildDiagonalMoves(this, board);
+	}
+
+	getAvailableMoves(board: Board): Square[] {
+		return this.getAttackingSquares(board).filter((move) =>
+			canMoveOntoSquare(move, this, board),
+		);
 	}
 }

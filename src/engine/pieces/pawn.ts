@@ -2,7 +2,7 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
-import { canAttack, isOnBoard } from "engine/moveHelpers";
+import { canMoveOntoSquare, isOnBoard } from "engine/moveHelpers";
 
 export class Pawn extends Piece {
 	hasMoved: boolean = false;
@@ -14,6 +14,21 @@ export class Pawn extends Piece {
 
 	getDirection() {
 		return this.player === Player.WHITE ? 1 : -1;
+	}
+
+	getAttackingSquares(board: Board): Square[] {
+		const currentSquare = board.findPiece(this);
+
+		return [
+			new Square(
+				currentSquare.row + this.getDirection(),
+				currentSquare.col - 1,
+			),
+			new Square(
+				currentSquare.row + this.getDirection(),
+				currentSquare.col + 1,
+			),
+		];
 	}
 
 	getAvailableMoves(board: Board): Square[] {
@@ -41,30 +56,26 @@ export class Pawn extends Piece {
 			}
 		}
 
-		const attacks = [
-			new Square(
-				currentSquare.row + this.getDirection(),
-				currentSquare.col - 1,
-			),
-			new Square(
-				currentSquare.row + this.getDirection(),
-				currentSquare.col + 1,
-			),
-		].filter((attack) => {
-			if (canAttack(this, board.getPiece(attack))) {
-				return true;
-			}
+		const attacks = this.getAttackingSquares(board).filter(
+			(attack) => {
+				if (
+					board.getPiece(attack) &&
+					canMoveOntoSquare(attack, this, board)
+				) {
+					return true;
+				}
 
-			const adjacentPiece = board.getPiece(
-				new Square(currentSquare.row, attack.col),
-			);
+				const adjacentPiece = board.getPiece(
+					new Square(currentSquare.row, attack.col),
+				);
 
-			return (
-				adjacentPiece instanceof Pawn &&
-				adjacentPiece.movedTwoSpaces &&
-				board.lastMoved === adjacentPiece
-			);
-		});
+				return (
+					adjacentPiece instanceof Pawn &&
+					adjacentPiece.movedTwoSpaces &&
+					board.lastMoved === adjacentPiece
+				);
+			},
+		);
 
 		return moves.concat(attacks);
 	}
