@@ -10,7 +10,6 @@ export class Rook extends Piece {
 	}
 
 	getAvailableMoves(board: Board): Square[] {
-		const currentPosition = board.findPiece(this);
-		return buildOrthogonalMoves(currentPosition, board);
+		return buildOrthogonalMoves(this, board);
 	}
 }

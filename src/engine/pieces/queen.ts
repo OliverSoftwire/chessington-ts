@@ -13,9 +13,8 @@ export class Queen extends Piece {
 	}
 
 	getAvailableMoves(board: Board): Square[] {
-		const currentPosition = board.findPiece(this);
-		return buildOrthogonalMoves(currentPosition, board).concat(
-			buildDiagonalMoves(currentPosition, board),
+		return buildOrthogonalMoves(this, board).concat(
+			buildDiagonalMoves(this, board),
 		);
 	}
 }

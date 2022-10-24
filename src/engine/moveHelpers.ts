@@ -1,6 +1,7 @@
 import Square from "engine/square";
 import Board from "engine/board";
 import GameSettings from "engine/gameSettings";
+import { King, Piece } from "./pieces";
 
 const { BOARD_SIZE } = GameSettings;
 
@@ -14,10 +15,11 @@ export function isOnBoard(square: Square): boolean {
 }
 
 function filterLines(
-	currentPosition: Square,
+	piece: Piece,
 	board: Board,
 	lineFuncs: ((offset: number) => Square)[],
 ): Square[] {
+	const currentPosition = board.findPiece(piece);
 	const moves: Square[] = [];
 
 	const offsets = Array.from(
@@ -35,9 +37,17 @@ function filterLines(
 			);
 			if (!isOnBoard(move)) break;
 
-			moves.push(move);
+			const pieceOnSquare = board.getPiece(move);
+			if (
+				pieceOnSquare &&
+				(pieceOnSquare.player === piece.player ||
+					pieceOnSquare instanceof King)
+			) {
+				break;
+			}
 
-			if (board.getPiece(move)) break;
+			moves.push(move);
+			if (pieceOnSquare) break;
 		}
 	}
 
@@ -45,10 +55,10 @@ function filterLines(
 }
 
 export function buildOrthogonalMoves(
-	currentPosition: Square,
+	piece: Piece,
 	board: Board,
 ): Square[] {
-	return filterLines(currentPosition, board, [
+	return filterLines(piece, board, [
 		(offset) => new Square(offset, 0),
 		(offset) => new Square(-offset, 0),
 		(offset) => new Square(0, offset),
@@ -56,11 +66,8 @@ export function buildOrthogonalMoves(
 	]);
 }
 
-export function buildDiagonalMoves(
-	currentPosition: Square,
-	board: Board,
-): Square[] {
-	return filterLines(currentPosition, board, [
+export function buildDiagonalMoves(piece: Piece, board: Board): Square[] {
+	return filterLines(piece, board, [
 		(offset) => new Square(offset, offset),
 		(offset) => new Square(offset, -offset),
 		(offset) => new Square(-offset, offset),

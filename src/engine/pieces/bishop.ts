@@ -9,7 +9,6 @@ export class Bishop extends Piece {
 	}
 
 	getAvailableMoves(board: Board): Square[] {
-		const currentPosition = board.findPiece(this);
-		return buildDiagonalMoves(currentPosition, board);
+		return buildDiagonalMoves(this, board);
 	}
 }
