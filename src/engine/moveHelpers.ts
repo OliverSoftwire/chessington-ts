@@ -16,32 +16,26 @@ export function buildOrthogonalMoves(
 ): Square[] {
 	const moves: Square[] = [];
 
-	for (let row = currentPosition.row + 1; row < 8; row++) {
-		const move = new Square(row, currentPosition.col);
-		moves.push(move);
+	const offsets = Array.from({ length: 6 }, (_, i) => i + 1);
+	const lines = [
+		offsets.map((offset) => new Square(offset, 0)),
+		offsets.map((offset) => new Square(-offset, 0)),
+		offsets.map((offset) => new Square(0, offset)),
+		offsets.map((offset) => new Square(0, -offset)),
+	];
 
-		if (board.getPiece(move)) break;
-	}
+	for (const line of lines) {
+		for (const offset of line) {
+			const move = new Square(
+				currentPosition.row + offset.row,
+				currentPosition.col + offset.col,
+			);
+			if (!isOnBoard(move)) break;
 
-	for (let row = currentPosition.row - 1; row >= 0; row--) {
-		const move = new Square(row, currentPosition.col);
-		moves.push(move);
+			moves.push(move);
 
-		if (board.getPiece(move)) break;
-	}
-
-	for (let col = currentPosition.col + 1; col < 8; col++) {
-		const move = new Square(currentPosition.row, col);
-		moves.push(move);
-
-		if (board.getPiece(move)) break;
-	}
-
-	for (let col = currentPosition.col - 1; col >= 0; col--) {
-		const move = new Square(currentPosition.row, col);
-		moves.push(move);
-
-		if (board.getPiece(move)) break;
+			if (board.getPiece(move)) break;
+		}
 	}
 
 	return moves;
