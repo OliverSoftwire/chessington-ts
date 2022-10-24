@@ -35,11 +35,9 @@ export class Pawn extends Piece {
 				currentSquare.col,
 			);
 
-			if (!isOnBoard(move) || board.getPiece(move)) {
-				return moves;
+			if (isOnBoard(move) && !board.getPiece(move)) {
+				moves.push(move);
 			}
-
-			moves.push(move);
 		}
 
 		return moves;
