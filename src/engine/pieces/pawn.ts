@@ -9,6 +9,13 @@ export class Pawn extends Piece {
 	}
 
 	getAvailableMoves(_board: Board): Square[] {
-		return [] as Square[];
+		const currentSquare = _board.findPiece(this);
+
+		return [
+			new Square(
+				currentSquare.row + (this.player == Player.WHITE ? 1 : -1),
+				currentSquare.col,
+			),
+		];
 	}
 }
