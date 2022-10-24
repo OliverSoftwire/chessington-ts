@@ -1,5 +1,14 @@
 import Square from "engine/square";
 
+export function isOnBoard(square: Square): boolean {
+	return (
+		square.row >= 0 &&
+		square.row < 8 &&
+		square.col >= 0 &&
+		square.col < 8
+	);
+}
+
 export function buildOrthogonalMoves(currentPosition: Square): Square[] {
 	const moves: Square[] = [];
 
@@ -34,11 +43,5 @@ export function buildDiagonalMoves(currentPosition: Square): Square[] {
 		);
 	}
 
-	return moves.filter(
-		(square) =>
-			square.row >= 0 &&
-			square.row < 8 &&
-			square.col >= 0 &&
-			square.col < 8,
-	);
+	return moves.filter((move) => isOnBoard(move));
 }

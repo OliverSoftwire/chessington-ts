@@ -2,6 +2,7 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
+import { isOnBoard } from "engine/moveHelpers";
 
 const MOVES = [
 	// Up
@@ -34,12 +35,6 @@ export class Knight extends Piece {
 					currentPosition.row + move.row,
 					currentPosition.col + move.col,
 				),
-		).filter(
-			(move) =>
-				move.row >= 0 &&
-				move.row < 8 &&
-				move.col >= 0 &&
-				move.col < 8,
-		);
+		).filter((move) => isOnBoard(move));
 	}
 }
