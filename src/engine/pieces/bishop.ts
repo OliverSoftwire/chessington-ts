@@ -8,8 +8,8 @@ export class Bishop extends Piece {
 		super(player);
 	}
 
-	getAvailableMoves(_board: Board): Square[] {
-		const currentPosition = _board.findPiece(this);
-		return buildDiagonalMoves(currentPosition);
+	getAvailableMoves(board: Board): Square[] {
+		const currentPosition = board.findPiece(this);
+		return buildDiagonalMoves(currentPosition, board);
 	}
 }

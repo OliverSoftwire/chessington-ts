@@ -47,22 +47,35 @@ export function buildOrthogonalMoves(
 	return moves;
 }
 
-export function buildDiagonalMoves(currentPosition: Square): Square[] {
+export function buildDiagonalMoves(
+	currentPosition: Square,
+	board: Board,
+): Square[] {
 	const moves: Square[] = [];
 
-	for (let offset = 1 - BOARD_SIZE; offset < BOARD_SIZE; offset++) {
-		if (offset === 0) continue;
+	const offsets = Array.from(
+		{ length: BOARD_SIZE - 2 },
+		(_, i) => i + 1,
+	);
+	const lines = [
+		offsets.map((offset) => new Square(offset, offset)),
+		offsets.map((offset) => new Square(offset, -offset)),
+		offsets.map((offset) => new Square(-offset, offset)),
+		offsets.map((offset) => new Square(-offset, -offset)),
+	];
 
-		moves.push(
-			new Square(
-				currentPosition.row + offset,
-				currentPosition.col + offset,
-			),
-			new Square(
-				currentPosition.row - offset,
-				currentPosition.col + offset,
-			),
-		);
+	for (const line of lines) {
+		for (const offset of line) {
+			const move = new Square(
+				currentPosition.row + offset.row,
+				currentPosition.col + offset.col,
+			);
+			if (!isOnBoard(move)) break;
+
+			moves.push(move);
+
+			if (board.getPiece(move)) break;
+		}
 	}
 
 	return moves.filter((move) => isOnBoard(move));
