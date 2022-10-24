@@ -2,6 +2,7 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
+import { isOnBoard } from "engine/moveHelpers";
 
 export class Pawn extends Piece {
 	hasMoved: boolean = false;
@@ -24,21 +25,21 @@ export class Pawn extends Piece {
 			),
 		];
 
-		if (board.getPiece(moves[0])) {
+		if (!isOnBoard(moves[0]) || board.getPiece(moves[0])) {
 			return [];
 		}
 
 		if (!this.hasMoved) {
-			moves.push(
-				new Square(
-					currentSquare.row + this.getDirection() * 2,
-					currentSquare.col,
-				),
+			const move = new Square(
+				currentSquare.row + this.getDirection() * 2,
+				currentSquare.col,
 			);
 
-			if (board.getPiece(moves[1])) {
-				return [];
+			if (!isOnBoard(move) || board.getPiece(move)) {
+				return moves;
 			}
+
+			moves.push(move);
 		}
 
 		return moves;
