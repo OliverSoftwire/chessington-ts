@@ -14,8 +14,8 @@ export class Pawn extends Piece {
 		return this.player === Player.WHITE ? 1 : -1;
 	}
 
-	getAvailableMoves(_board: Board): Square[] {
-		const currentSquare = _board.findPiece(this);
+	getAvailableMoves(board: Board): Square[] {
+		const currentSquare = board.findPiece(this);
 
 		const moves = [
 			new Square(
@@ -24,6 +24,10 @@ export class Pawn extends Piece {
 			),
 		];
 
+		if (board.getPiece(moves[0])) {
+			return [];
+		}
+
 		if (!this.hasMoved) {
 			moves.push(
 				new Square(
@@ -31,6 +35,10 @@ export class Pawn extends Piece {
 					currentSquare.col,
 				),
 			);
+
+			if (board.getPiece(moves[1])) {
+				return [];
+			}
 		}
 
 		return moves;
