@@ -15,7 +15,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"noUnusedLocals": false,
 		"noUnusedParameters": true,
-		"noImplicitAny": true
+		"noImplicitAny": true,
+		"baseUrl": "./src"
 	},
 	"include": ["src", "rollup.config.ts"]
 }

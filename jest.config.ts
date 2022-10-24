@@ -8,6 +8,7 @@ const config: Config = {
 	},
 	transformIgnorePatterns: ["<rootDir>/node_modules"],
 	roots: ["<rootDir>/src"],
+	moduleDirectories: ["node_modules", "src"],
 };
 
 export default config;
