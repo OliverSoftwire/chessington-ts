@@ -1,4 +1,5 @@
 import Square from "engine/square";
+import Board from "engine/board";
 
 export function isOnBoard(square: Square): boolean {
 	return (
@@ -9,17 +10,38 @@ export function isOnBoard(square: Square): boolean {
 	);
 }
 
-export function buildOrthogonalMoves(currentPosition: Square): Square[] {
+export function buildOrthogonalMoves(
+	currentPosition: Square,
+	board: Board,
+): Square[] {
 	const moves: Square[] = [];
 
-	for (let row = 0; row < 8; row++) {
-		if (row === currentPosition.row) continue;
-		moves.push(new Square(row, currentPosition.col));
+	for (let row = currentPosition.row + 1; row < 8; row++) {
+		const move = new Square(row, currentPosition.col);
+		moves.push(move);
+
+		if (board.getPiece(move)) break;
 	}
 
-	for (let col = 0; col < 8; col++) {
-		if (col === currentPosition.col) continue;
-		moves.push(new Square(currentPosition.row, col));
+	for (let row = currentPosition.row - 1; row >= 0; row--) {
+		const move = new Square(row, currentPosition.col);
+		moves.push(move);
+
+		if (board.getPiece(move)) break;
+	}
+
+	for (let col = currentPosition.col + 1; col < 8; col++) {
+		const move = new Square(currentPosition.row, col);
+		moves.push(move);
+
+		if (board.getPiece(move)) break;
+	}
+
+	for (let col = currentPosition.col - 1; col >= 0; col--) {
+		const move = new Square(currentPosition.row, col);
+		moves.push(move);
+
+		if (board.getPiece(move)) break;
 	}
 
 	return moves;
