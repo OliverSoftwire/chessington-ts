@@ -1,4 +1,4 @@
-import { Config } from "jest"
+import { Config } from "jest";
 
 const config: Config = {
 	preset: "ts-jest",
@@ -8,6 +8,6 @@ const config: Config = {
 	},
 	transformIgnorePatterns: ["<rootDir>/node_modules"],
 	roots: ["<rootDir>/src"],
-}
+};
 
-export default config
+export default config;

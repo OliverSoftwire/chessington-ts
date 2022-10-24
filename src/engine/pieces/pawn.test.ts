@@ -1,37 +1,31 @@
-import Board from '../board';
-import Player from '../player';
-import Square from '../square';
-import { Pawn } from './pawn'
+import Board from "../board";
+import Player from "../player";
+import Square from "../square";
+import { Pawn } from "./pawn";
 
-describe('Pawn', () => {
+describe("Pawn", () => {
+	let board: Board;
+	beforeEach(() => (board = new Board()));
 
-  let board: Board;
-  beforeEach(() => board = new Board())
+	describe("white pawns", () => {
+		it("can move one square up", () => {
+			const pawn = new Pawn(Player.WHITE);
+			board.setPiece(Square.at(0, 0), pawn);
 
-  describe('white pawns', () => {
-        
-    it('can move one square up', () => {
-        const pawn = new Pawn(Player.WHITE);
-        board.setPiece(Square.at(0, 0), pawn);
+			const moves = pawn.getAvailableMoves(board);
 
-        const moves = pawn.getAvailableMoves(board);
+			expect(moves).toContainEqual(Square.at(1, 0));
+		});
+	});
 
-        expect(moves).toContainEqual(Square.at(1, 0))
-    });
+	describe("black pawns", () => {
+		it("can move one square down", () => {
+			const pawn = new Pawn(Player.BLACK);
+			board.setPiece(Square.at(7, 7), pawn);
 
-  });
+			const moves = pawn.getAvailableMoves(board);
 
-  describe('black pawns', () => {
-      
-      it('can move one square down', () => {
-          const pawn = new Pawn(Player.BLACK);
-          board.setPiece(Square.at(7, 7), pawn);
-
-          const moves = pawn.getAvailableMoves(board);
-
-          expect(moves).toContainEqual(Square.at(6, 7));
-      });
-
-  });
-
-})
+			expect(moves).toContainEqual(Square.at(6, 7));
+		});
+	});
+});

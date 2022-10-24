@@ -1,13 +1,13 @@
 export default class Square {
-	row: number
-	col: number
+	row: number;
+	col: number;
 	constructor(row: number, col: number) {
-		this.row = row
-		this.col = col
+		this.row = row;
+		this.col = col;
 	}
 
 	static at(row: number, col: number) {
-		return new Square(row, col)
+		return new Square(row, col);
 	}
 
 	equals(otherSquare: Square) {
@@ -15,10 +15,10 @@ export default class Square {
 			!!otherSquare &&
 			this.row === otherSquare.row &&
 			this.col === otherSquare.col
-		)
+		);
 	}
 
 	toString() {
-		return `Row ${this.row}, Col ${this.col}`
+		return `Row ${this.row}, Col ${this.col}`;
 	}
 }

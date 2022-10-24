@@ -1,14 +1,14 @@
-import Board from "../board"
-import Player from "../player"
-import { Piece } from "./piece"
-import Square from "../square"
+import Board from "../board";
+import Player from "../player";
+import { Piece } from "./piece";
+import Square from "../square";
 
 export class Queen extends Piece {
 	constructor(player: Player) {
-		super(player)
+		super(player);
 	}
 
 	getAvailableMoves(_board: Board): Square[] {
-		return [] as Square[]
+		return [] as Square[];
 	}
 }
