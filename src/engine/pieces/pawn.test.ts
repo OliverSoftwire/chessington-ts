@@ -142,49 +142,51 @@ describe("Pawn", () => {
 		expect(moves).not.toContainEqual(Square.at(5, 3));
 	});
 
-	it("can move diagonally if there is a pawn to take en passant", () => {
-		const board = new Board(Player.BLACK);
+	describe("en passant", () => {
+		it("can move diagonally if there is a pawn to take en passant", () => {
+			const board = new Board(Player.BLACK);
 
-		const pawn = new Pawn(Player.WHITE);
-		const opposingPawn = new Pawn(Player.BLACK);
-		board.setPiece(new Square(4, 4), pawn);
-		board.setPiece(new Square(6, 5), opposingPawn);
+			const pawn = new Pawn(Player.WHITE);
+			const opposingPawn = new Pawn(Player.BLACK);
+			board.setPiece(new Square(4, 4), pawn);
+			board.setPiece(new Square(6, 5), opposingPawn);
 
-		opposingPawn.moveTo(board, new Square(4, 5));
+			opposingPawn.moveTo(board, new Square(4, 5));
 
-		const moves = pawn.getAvailableMoves(board);
+			const moves = pawn.getAvailableMoves(board);
 
-		expect(moves).toContainEqual(new Square(5, 5));
-	});
+			expect(moves).toContainEqual(new Square(5, 5));
+		});
 
-	it("cannot move diagonally to take en passant if the opposing pawn did not move two spaces", () => {
-		const board = new Board(Player.BLACK);
+		it("cannot move diagonally to take en passant if the opposing pawn did not move two spaces", () => {
+			const board = new Board(Player.BLACK);
 
-		const pawn = new Pawn(Player.WHITE);
-		const opposingPawn = new Pawn(Player.BLACK);
-		board.setPiece(new Square(4, 4), pawn);
-		board.setPiece(new Square(5, 5), opposingPawn);
+			const pawn = new Pawn(Player.WHITE);
+			const opposingPawn = new Pawn(Player.BLACK);
+			board.setPiece(new Square(4, 4), pawn);
+			board.setPiece(new Square(5, 5), opposingPawn);
 
-		opposingPawn.moveTo(board, new Square(4, 5));
+			opposingPawn.moveTo(board, new Square(4, 5));
 
-		const moves = pawn.getAvailableMoves(board);
+			const moves = pawn.getAvailableMoves(board);
 
-		expect(moves).not.toContainEqual(new Square(5, 5));
-	});
+			expect(moves).not.toContainEqual(new Square(5, 5));
+		});
 
-	it("cannot move diagonally to take en passant if the opposing pawn did not move two spaces last turn", () => {
-		const board = new Board(Player.BLACK);
+		it("cannot move diagonally to take en passant if the opposing pawn did not move two spaces last turn", () => {
+			const board = new Board(Player.BLACK);
 
-		const pawn = new Pawn(Player.WHITE);
-		const opposingPawn = new Pawn(Player.BLACK);
-		board.setPiece(new Square(3, 4), pawn);
-		board.setPiece(new Square(6, 5), opposingPawn);
+			const pawn = new Pawn(Player.WHITE);
+			const opposingPawn = new Pawn(Player.BLACK);
+			board.setPiece(new Square(3, 4), pawn);
+			board.setPiece(new Square(6, 5), opposingPawn);
 
-		opposingPawn.moveTo(board, new Square(4, 5));
-		pawn.moveTo(board, new Square(4, 4));
+			opposingPawn.moveTo(board, new Square(4, 5));
+			pawn.moveTo(board, new Square(4, 4));
 
-		const moves = pawn.getAvailableMoves(board);
+			const moves = pawn.getAvailableMoves(board);
 
-		expect(moves).not.toContainEqual(new Square(5, 5));
+			expect(moves).not.toContainEqual(new Square(5, 5));
+		});
 	});
 });
