@@ -6,6 +6,7 @@ import { Piece } from "./pieces/piece";
 export default class Board {
 	currentPlayer: symbol;
 	board: (Piece | undefined)[][];
+	lastMoved?: Piece;
 
 	constructor(currentPlayer?: symbol) {
 		this.currentPlayer = currentPlayer || Player.WHITE;
@@ -48,6 +49,7 @@ export default class Board {
 				this.currentPlayer === Player.WHITE
 					? Player.BLACK
 					: Player.WHITE;
+			this.lastMoved = movingPiece;
 		}
 	}
 }
