@@ -2,7 +2,7 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
-import { isOnBoard } from "engine/moveHelpers";
+import { isValidMove } from "engine/moveHelpers";
 
 const MOVES = [
 	// Up
@@ -27,14 +27,14 @@ export class Knight extends Piece {
 		super(player);
 	}
 
-	getAvailableMoves(_board: Board): Square[] {
-		const currentPosition = _board.findPiece(this);
+	getAvailableMoves(board: Board): Square[] {
+		const currentPosition = board.findPiece(this);
 		return MOVES.map(
 			(move) =>
 				new Square(
 					currentPosition.row + move.row,
 					currentPosition.col + move.col,
 				),
-		).filter((move) => isOnBoard(move));
+		).filter((move) => isValidMove(move, this, board));
 	}
 }
