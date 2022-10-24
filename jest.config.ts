@@ -9,6 +9,7 @@ const config: Config = {
 	transformIgnorePatterns: ["<rootDir>/node_modules"],
 	roots: ["<rootDir>/src"],
 	moduleDirectories: ["node_modules", "src"],
+	setupFilesAfterEnv: ["jest-extended/all"],
 };
 
 export default config;

@@ -1,3 +1,5 @@
+import "jest-extended";
+
 import Board from "../board";
 import Player from "../player";
 import Square from "../square";
@@ -48,6 +50,6 @@ describe("King", () => {
 			Square.at(1, 0),
 		];
 
-		expect(moves).toEqual(expectedMoves);
+		expect(moves).toIncludeSameMembers(expectedMoves);
 	});
 });
