@@ -5,12 +5,13 @@ import Square from "../square";
 
 export class Pawn extends Piece {
 	hasMoved: boolean = false;
-	direction: number;
 
 	constructor(player: Player) {
 		super(player);
+	}
 
-		this.direction = player === Player.WHITE ? 1 : -1;
+	getDirection() {
+		return this.player === Player.WHITE ? 1 : -1;
 	}
 
 	getAvailableMoves(_board: Board): Square[] {
@@ -18,7 +19,7 @@ export class Pawn extends Piece {
 
 		const moves = [
 			new Square(
-				currentSquare.row + this.direction,
+				currentSquare.row + this.getDirection(),
 				currentSquare.col,
 			),
 		];
@@ -26,7 +27,7 @@ export class Pawn extends Piece {
 		if (!this.hasMoved) {
 			moves.push(
 				new Square(
-					currentSquare.row + this.direction * 2,
+					currentSquare.row + this.getDirection() * 2,
 					currentSquare.col,
 				),
 			);
