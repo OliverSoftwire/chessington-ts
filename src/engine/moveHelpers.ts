@@ -1,12 +1,15 @@
 import Square from "engine/square";
 import Board from "engine/board";
+import GameSettings from "engine/gameSettings";
+
+const { BOARD_SIZE } = GameSettings;
 
 export function isOnBoard(square: Square): boolean {
 	return (
 		square.row >= 0 &&
-		square.row < 8 &&
+		square.row < BOARD_SIZE &&
 		square.col >= 0 &&
-		square.col < 8
+		square.col < BOARD_SIZE
 	);
 }
 
@@ -16,7 +19,10 @@ export function buildOrthogonalMoves(
 ): Square[] {
 	const moves: Square[] = [];
 
-	const offsets = Array.from({ length: 6 }, (_, i) => i + 1);
+	const offsets = Array.from(
+		{ length: BOARD_SIZE - 2 },
+		(_, i) => i + 1,
+	);
 	const lines = [
 		offsets.map((offset) => new Square(offset, 0)),
 		offsets.map((offset) => new Square(-offset, 0)),
@@ -44,7 +50,7 @@ export function buildOrthogonalMoves(
 export function buildDiagonalMoves(currentPosition: Square): Square[] {
 	const moves: Square[] = [];
 
-	for (let offset = -7; offset < 8; offset++) {
+	for (let offset = 1 - BOARD_SIZE; offset < BOARD_SIZE; offset++) {
 		if (offset === 0) continue;
 
 		moves.push(
