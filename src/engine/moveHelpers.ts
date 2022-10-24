@@ -13,9 +13,10 @@ export function isOnBoard(square: Square): boolean {
 	);
 }
 
-export function buildOrthogonalMoves(
+function filterLines(
 	currentPosition: Square,
 	board: Board,
+	lineFuncs: ((offset: number) => Square)[],
 ): Square[] {
 	const moves: Square[] = [];
 
@@ -23,12 +24,8 @@ export function buildOrthogonalMoves(
 		{ length: BOARD_SIZE - 2 },
 		(_, i) => i + 1,
 	);
-	const lines = [
-		offsets.map((offset) => new Square(offset, 0)),
-		offsets.map((offset) => new Square(-offset, 0)),
-		offsets.map((offset) => new Square(0, offset)),
-		offsets.map((offset) => new Square(0, -offset)),
-	];
+
+	const lines = lineFuncs.map((func) => offsets.map(func));
 
 	for (const line of lines) {
 		for (const offset of line) {
@@ -47,36 +44,26 @@ export function buildOrthogonalMoves(
 	return moves;
 }
 
+export function buildOrthogonalMoves(
+	currentPosition: Square,
+	board: Board,
+): Square[] {
+	return filterLines(currentPosition, board, [
+		(offset) => new Square(offset, 0),
+		(offset) => new Square(-offset, 0),
+		(offset) => new Square(0, offset),
+		(offset) => new Square(0, -offset),
+	]);
+}
+
 export function buildDiagonalMoves(
 	currentPosition: Square,
 	board: Board,
 ): Square[] {
-	const moves: Square[] = [];
-
-	const offsets = Array.from(
-		{ length: BOARD_SIZE - 2 },
-		(_, i) => i + 1,
-	);
-	const lines = [
-		offsets.map((offset) => new Square(offset, offset)),
-		offsets.map((offset) => new Square(offset, -offset)),
-		offsets.map((offset) => new Square(-offset, offset)),
-		offsets.map((offset) => new Square(-offset, -offset)),
-	];
-
-	for (const line of lines) {
-		for (const offset of line) {
-			const move = new Square(
-				currentPosition.row + offset.row,
-				currentPosition.col + offset.col,
-			);
-			if (!isOnBoard(move)) break;
-
-			moves.push(move);
-
-			if (board.getPiece(move)) break;
-		}
-	}
-
-	return moves.filter((move) => isOnBoard(move));
+	return filterLines(currentPosition, board, [
+		(offset) => new Square(offset, offset),
+		(offset) => new Square(offset, -offset),
+		(offset) => new Square(-offset, offset),
+		(offset) => new Square(-offset, -offset),
+	]);
 }
