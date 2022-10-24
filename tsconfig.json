@@ -1,21 +1,21 @@
 {
-  "extends": "@tsconfig/recommended/tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "target": "es2016",
-    "lib": ["ESNext", "DOM"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "removeComments": true,
-    "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
-    "noImplicitAny": true,
-  },
-  "include": ["src", "rollup.config.ts"]
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "es2016",
+		"lib": ["ESNext", "DOM"],
+		"allowJs": false,
+		"skipLibCheck": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"removeComments": true,
+		"forceConsistentCasingInFileNames": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": true,
+		"noImplicitAny": true
+	},
+	"include": ["src", "rollup.config.ts"]
 }

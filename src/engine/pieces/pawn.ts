@@ -1,14 +1,14 @@
-import Board from '../board'
-import Player from '../player'
-import { Piece } from './piece'
-import Square from '../square'
+import Board from "../board"
+import Player from "../player"
+import { Piece } from "./piece"
+import Square from "../square"
 
 export class Pawn extends Piece {
-  constructor(player: Player) {
-    super(player)
-  }
+	constructor(player: Player) {
+		super(player)
+	}
 
-  getAvailableMoves(_board: Board): Square[] {
-    return [] as Square[]
-  }
+	getAvailableMoves(_board: Board): Square[] {
+		return [] as Square[]
+	}
 }
