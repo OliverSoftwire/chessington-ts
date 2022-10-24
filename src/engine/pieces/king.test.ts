@@ -86,4 +86,15 @@ describe("King", () => {
 
 		expect(moves).not.toContainEqual(Square.at(5, 5));
 	});
+
+	it("cannot move into check", () => {
+		const king = new King(Player.WHITE);
+		const opposingPawn = new Pawn(Player.BLACK);
+		board.setPiece(new Square(4, 5), king);
+		board.setPiece(new Square(6, 7), opposingPawn);
+
+		const moves = king.getAvailableMoves(board);
+
+		expect(moves).not.toContainEqual(new Square(5, 6));
+	});
 });
