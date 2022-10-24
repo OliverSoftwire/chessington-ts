@@ -2,7 +2,7 @@ import Board from "../board";
 import Player from "../player";
 import { Piece } from "./piece";
 import Square from "../square";
-import { isOnBoard } from "engine/moveHelpers";
+import { canAttack, isOnBoard } from "engine/moveHelpers";
 
 export class Pawn extends Piece {
 	hasMoved: boolean = false;
@@ -40,7 +40,18 @@ export class Pawn extends Piece {
 			}
 		}
 
-		return moves;
+		const attacks = [
+			new Square(
+				currentSquare.row + this.getDirection(),
+				currentSquare.col - 1,
+			),
+			new Square(
+				currentSquare.row + this.getDirection(),
+				currentSquare.col + 1,
+			),
+		].filter((attack) => canAttack(this, board.getPiece(attack)));
+
+		return moves.concat(attacks);
 	}
 
 	moveTo(board: Board, newSquare: Square): void {

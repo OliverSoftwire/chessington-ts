@@ -14,6 +14,12 @@ export function isOnBoard(square: Square): boolean {
 	);
 }
 
+export function canAttack(attacker: Piece, target?: Piece): boolean {
+	if (!target) return false;
+
+	return target.player !== attacker.player && !(target instanceof King);
+}
+
 export function isValidMove(
 	move: Square,
 	piece: Piece,
@@ -23,10 +29,7 @@ export function isValidMove(
 
 	const pieceUnderMove = board.getPiece(move);
 	if (pieceUnderMove) {
-		return (
-			pieceUnderMove.player !== piece.player &&
-			!(pieceUnderMove instanceof King)
-		);
+		return canAttack(piece, pieceUnderMove);
 	}
 
 	return true;
