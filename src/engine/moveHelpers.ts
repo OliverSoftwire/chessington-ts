@@ -14,6 +14,24 @@ export function isOnBoard(square: Square): boolean {
 	);
 }
 
+export function isValidMove(
+	move: Square,
+	piece: Piece,
+	board: Board,
+): boolean {
+	if (!isOnBoard(move)) return false;
+
+	const pieceUnderMove = board.getPiece(move);
+	if (pieceUnderMove) {
+		return (
+			pieceUnderMove.player !== piece.player &&
+			!(pieceUnderMove instanceof King)
+		);
+	}
+
+	return true;
+}
+
 function filterLines(
 	piece: Piece,
 	board: Board,
@@ -35,19 +53,10 @@ function filterLines(
 				currentPosition.row + offset.row,
 				currentPosition.col + offset.col,
 			);
-			if (!isOnBoard(move)) break;
-
-			const pieceOnSquare = board.getPiece(move);
-			if (
-				pieceOnSquare &&
-				(pieceOnSquare.player === piece.player ||
-					pieceOnSquare instanceof King)
-			) {
-				break;
-			}
+			if (!isValidMove(move, piece, board)) break;
 
 			moves.push(move);
-			if (pieceOnSquare) break;
+			if (board.getPiece(move)) break;
 		}
 	}
 
