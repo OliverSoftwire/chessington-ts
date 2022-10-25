@@ -7,6 +7,7 @@ import { King } from "./king";
 import { Knight } from "./knight";
 import { Pawn } from "./pawn";
 import { Queen } from "./queen";
+import { Rook } from "./rook";
 
 describe("King", () => {
 	let board: Board;
@@ -119,6 +120,81 @@ describe("King", () => {
 			const moves = king.getAvailableMoves(board);
 
 			expect(moves).toIncludeSameMembers(expectedMoves);
+		});
+	});
+
+	describe("castling", () => {
+		it("can castle kingside", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 7), rook);
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).toContainEqual(new Square(0, 6));
+		});
+
+		it("can castle queenside", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 0), rook);
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).toContainEqual(new Square(0, 2));
+		});
+
+		it("cannot castle if the rook has moved", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 1), rook);
+			rook.moveTo(board, new Square(0, 0));
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).not.toContainEqual(new Square(0, 2));
+		});
+
+		it("cannot castle if a piece is between the king and rook", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			const knight = new Knight(Player.WHITE);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 0), rook);
+			board.setPiece(new Square(0, 1), knight);
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).not.toContainEqual(new Square(0, 2));
+		});
+
+		it("cannot castle if the king is in check", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			const opposingRook = new Rook(Player.BLACK);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 0), rook);
+			board.setPiece(new Square(7, 4), opposingRook);
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).not.toContainEqual(new Square(0, 2));
+		});
+
+		it("cannot castle if king passes through attacked square", () => {
+			const king = new King(Player.WHITE);
+			const rook = new Rook(Player.WHITE);
+			const opposingRook = new Rook(Player.BLACK);
+			board.setPiece(new Square(0, 4), king);
+			board.setPiece(new Square(0, 0), rook);
+			board.setPiece(new Square(7, 3), opposingRook);
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).not.toContainEqual(new Square(0, 2));
 		});
 	});
 });
