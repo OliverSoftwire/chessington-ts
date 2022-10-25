@@ -4,7 +4,9 @@ import Board from "../board";
 import Player from "../player";
 import Square from "../square";
 import { King } from "./king";
+import { Knight } from "./knight";
 import { Pawn } from "./pawn";
+import { Queen } from "./queen";
 
 describe("King", () => {
 	let board: Board;
@@ -87,14 +89,36 @@ describe("King", () => {
 		expect(moves).not.toContainEqual(Square.at(5, 5));
 	});
 
-	it("cannot move into check", () => {
-		const king = new King(Player.WHITE);
-		const opposingPawn = new Pawn(Player.BLACK);
-		board.setPiece(new Square(4, 5), king);
-		board.setPiece(new Square(6, 7), opposingPawn);
+	describe("check", () => {
+		it("cannot move into check", () => {
+			const king = new King(Player.WHITE);
+			const opposingPawn = new Pawn(Player.BLACK);
+			board.setPiece(new Square(4, 5), king);
+			board.setPiece(new Square(6, 7), opposingPawn);
 
-		const moves = king.getAvailableMoves(board);
+			const moves = king.getAvailableMoves(board);
 
-		expect(moves).not.toContainEqual(new Square(5, 6));
+			expect(moves).not.toContainEqual(new Square(5, 6));
+		});
+
+		it("cannot take piece if piece is protected", () => {
+			const king = new King(Player.WHITE);
+			const opposingKnight = new Knight(Player.BLACK);
+			const opposingQueen = new Queen(Player.BLACK);
+
+			board.setPiece(new Square(4, 5), king);
+			board.setPiece(new Square(5, 6), opposingKnight);
+			board.setPiece(new Square(7, 4), opposingQueen);
+
+			const expectedMoves = [
+				new Square(5, 5),
+				new Square(4, 6),
+				new Square(3, 6),
+			];
+
+			const moves = king.getAvailableMoves(board);
+
+			expect(moves).toIncludeSameMembers(expectedMoves);
+		});
 	});
 });
