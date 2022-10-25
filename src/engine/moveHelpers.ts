@@ -39,7 +39,7 @@ function filterLines(
 	const moves: Square[] = [];
 
 	const offsets = Array.from(
-		{ length: BOARD_SIZE - 2 },
+		{ length: BOARD_SIZE - 1 },
 		(_, i) => i + 1,
 	);
 

@@ -67,11 +67,14 @@ export class King extends Piece {
 			},
 		);
 
-		if (this.hasMoved) {
+		const currentPosition = board.findPiece(this);
+		if (
+			this.hasMoved ||
+			isSquareAttacked(board, this.player, currentPosition)
+		) {
 			return normalMoves;
 		}
 
-		const currentPosition = board.findPiece(this);
 		const unmovedRooksOnRow = board.board[currentPosition.row].filter(
 			(piece) =>
 				piece instanceof Rook &&
