@@ -3,12 +3,16 @@ import { Piece } from "./piece";
 import Square from "../square";
 import { canMoveOntoSquare } from "engine/moveHelpers";
 import Player from "engine/player";
+import GameSettings from "engine/gameSettings";
+import { Rook } from "./rook";
 
 function isSquareAttacked(
 	board: Board,
-	attackingPlayer: symbol,
+	defendingPlayer: symbol,
 	square: Square,
 ): boolean {
+	const attackingPlayer =
+		defendingPlayer === Player.WHITE ? Player.BLACK : Player.WHITE;
 	const opponentPieces = board.getPiecesOfPlayer(attackingPlayer);
 
 	for (const piece of opponentPieces) {
@@ -53,16 +57,53 @@ export class King extends Piece {
 	}
 
 	getAvailableMoves(board: Board): Square[] {
-		return this.getAttackingSquares(board).filter((move) => {
-			if (!canMoveOntoSquare(move, this, board)) {
-				return false;
+		const normalMoves = this.getAttackingSquares(board).filter(
+			(move) => {
+				if (!canMoveOntoSquare(move, this, board)) {
+					return false;
+				}
+
+				return !isSquareAttacked(board, this.player, move);
+			},
+		);
+
+		if (this.hasMoved) {
+			return normalMoves;
+		}
+
+		const currentPosition = board.findPiece(this);
+		const unmovedRooksOnRow = board.board[currentPosition.row].filter(
+			(piece) =>
+				piece instanceof Rook &&
+				piece.player === this.player &&
+				!piece.hasMoved,
+		);
+
+		if (unmovedRooksOnRow.length < 1) {
+			return normalMoves;
+		}
+
+		const possibleCastleMoves = [
+			new Square(currentPosition.row, currentPosition.col - 2),
+			new Square(currentPosition.row, currentPosition.col + 2),
+		].filter((move) => {
+			for (
+				let col = move.col;
+				col !== currentPosition.col;
+				col += move.col < currentPosition.col ? 1 : -1
+			) {
+				const square = new Square(currentPosition.row, col);
+				if (
+					!!board.getPiece(square) ||
+					isSquareAttacked(board, this.player, square)
+				) {
+					return false;
+				}
 			}
 
-			return !isSquareAttacked(
-				board,
-				this.player === Player.WHITE ? Player.BLACK : Player.WHITE,
-				move,
-			);
+			return true;
 		});
+
+		return normalMoves.concat(possibleCastleMoves);
 	}
 }
