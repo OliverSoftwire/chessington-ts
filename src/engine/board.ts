@@ -48,16 +48,20 @@ export default class Board {
 		throw new Error("The supplied piece is not on the board");
 	}
 
-	movePiece(fromSquare: Square, toSquare: Square) {
+	movePiece(fromSquare: Square, toSquare: Square): boolean {
 		const movingPiece = this.getPiece(fromSquare);
-		if (!!movingPiece && movingPiece.player === this.currentPlayer) {
-			this.setPiece(toSquare, movingPiece);
-			this.setPiece(fromSquare, undefined);
-			this.currentPlayer =
-				this.currentPlayer === Player.WHITE
-					? Player.BLACK
-					: Player.WHITE;
-			this.lastMoved = movingPiece;
+		if (!movingPiece || movingPiece.player !== this.currentPlayer) {
+			return false;
 		}
+
+		this.setPiece(toSquare, movingPiece);
+		this.setPiece(fromSquare, undefined);
+		this.currentPlayer =
+			this.currentPlayer === Player.WHITE
+				? Player.BLACK
+				: Player.WHITE;
+		this.lastMoved = movingPiece;
+
+		return true;
 	}
 }

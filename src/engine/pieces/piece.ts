@@ -4,6 +4,8 @@ import Square from "../square";
 
 export class Piece {
 	player: symbol;
+	hasMoved: boolean = false;
+
 	constructor(player: Player) {
 		this.player = player;
 	}
@@ -20,8 +22,13 @@ export class Piece {
 		);
 	}
 
-	moveTo(board: Board, newSquare: Square) {
+	moveTo(board: Board, newSquare: Square): boolean {
 		const currentSquare = board.findPiece(this);
-		board.movePiece(currentSquare, newSquare);
+		if (board.movePiece(currentSquare, newSquare)) {
+			this.hasMoved = true;
+			return true;
+		}
+
+		return false;
 	}
 }

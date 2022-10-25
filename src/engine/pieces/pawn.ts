@@ -80,14 +80,17 @@ export class Pawn extends Piece {
 		return moves.concat(attacks);
 	}
 
-	moveTo(board: Board, newSquare: Square): void {
-		this.hasMoved = true;
-
+	moveTo(board: Board, newSquare: Square): boolean {
 		const currentSquare = board.findPiece(this);
-		this.movedTwoSpaces =
-			newSquare.col === currentSquare.col &&
-			newSquare.row === currentSquare.row + 2 * this.getDirection();
+		const didMove = super.moveTo(board, newSquare);
 
-		super.moveTo(board, newSquare);
+		if (didMove) {
+			this.movedTwoSpaces =
+				newSquare.col === currentSquare.col &&
+				newSquare.row ===
+					currentSquare.row + 2 * this.getDirection();
+		}
+
+		return didMove;
 	}
 }
