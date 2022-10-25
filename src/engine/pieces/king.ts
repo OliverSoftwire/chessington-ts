@@ -4,6 +4,28 @@ import Square from "../square";
 import { canMoveOntoSquare } from "engine/moveHelpers";
 import Player from "engine/player";
 
+function isSquareAttacked(
+	board: Board,
+	attackingPlayer: symbol,
+	square: Square,
+): boolean {
+	const opponentPieces = board.getPiecesOfPlayer(attackingPlayer);
+
+	for (const piece of opponentPieces) {
+		const attackedSquares = piece.getAttackingSquares(board);
+
+		if (
+			attackedSquares.find((attackedSquare) =>
+				attackedSquare.equals(square),
+			)
+		) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 export class King extends Piece {
 	constructor(player: symbol) {
 		super(player);
@@ -36,25 +58,11 @@ export class King extends Piece {
 				return false;
 			}
 
-			const opponentPieces = board.getPiecesOfPlayer(
+			return !isSquareAttacked(
+				board,
 				this.player === Player.WHITE ? Player.BLACK : Player.WHITE,
+				move,
 			);
-
-			for (const piece of opponentPieces) {
-				const attackedSquares = piece.getAttackingSquares(board);
-
-				if (
-					attackedSquares.find(
-						(square) =>
-							square.row === move.row &&
-							square.col === move.col,
-					)
-				) {
-					return false;
-				}
-			}
-
-			return true;
 		});
 	}
 }
