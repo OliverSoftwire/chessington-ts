@@ -75,16 +75,44 @@ export class King extends Piece {
 			return normalMoves;
 		}
 
-		const unmovedRooksOnRow = board.board[currentPosition.row].filter(
-			(piece) =>
+		const rooksToCastle = board.board[currentPosition.row].filter(
+			(piece, col) =>
+				!!piece &&
 				piece instanceof Rook &&
 				piece.player === this.player &&
-				!piece.hasMoved,
-		);
+				!piece.hasMoved &&
+				Math.abs(col - currentPosition.col) > 2,
+		) as Rook[];
 
-		if (unmovedRooksOnRow.length < 1) {
+		if (rooksToCastle.length < 1) {
 			return normalMoves;
 		}
+
+		const queensideRook = rooksToCastle
+			.filter(
+				(rook) => board.findPiece(rook).col < currentPosition.col,
+			)
+			.reduce((prev: undefined | Rook, curr) => {
+				if (!prev) return curr;
+
+				return board.findPiece(prev).col >
+					board.findPiece(curr).col
+					? prev
+					: curr;
+			}, undefined);
+
+		const kingsideRook = rooksToCastle
+			.filter(
+				(rook) => board.findPiece(rook).col > currentPosition.col,
+			)
+			.reduce((prev: undefined | Rook, curr) => {
+				if (!prev) return curr;
+
+				return board.findPiece(prev).col <
+					board.findPiece(curr).col
+					? prev
+					: curr;
+			}, undefined);
 
 		const possibleCastleMoves = [
 			new Square(currentPosition.row, currentPosition.col - 2),
@@ -96,9 +124,33 @@ export class King extends Piece {
 				col += move.col < currentPosition.col ? 1 : -1
 			) {
 				const square = new Square(currentPosition.row, col);
+				if (isSquareAttacked(board, this.player, square)) {
+					return false;
+				}
+			}
+
+			const isKingside = move.col > currentPosition.col;
+
+			const rook = isKingside ? kingsideRook : queensideRook;
+			if (!rook) {
+				return false;
+			}
+
+			const rookPosition = board.findPiece(rook);
+			const rookDirection = isKingside ? 1 : -1;
+
+			for (
+				let col = 1;
+				col < Math.abs(rookPosition.col - currentPosition.col);
+				col++
+			) {
 				if (
-					!!board.getPiece(square) ||
-					isSquareAttacked(board, this.player, square)
+					board.getPiece(
+						new Square(
+							currentPosition.row,
+							currentPosition.col + col * rookDirection,
+						),
+					)
 				) {
 					return false;
 				}
