@@ -5,7 +5,6 @@ import Square from "../square";
 import { canMoveOntoSquare, isOnBoard } from "engine/moveHelpers";
 
 export class Pawn extends Piece {
-	hasMoved: boolean = false;
 	movedTwoSpaces: boolean = false;
 
 	constructor(player: Player) {
